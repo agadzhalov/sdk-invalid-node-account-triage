@@ -12,7 +12,9 @@ import { sortNodes } from '../utils/SortNodeList.js';
 import dotenv from "dotenv";
 
 dotenv.config();
-
+/**
+ * Case 1: Creating, Signing, and Submitting a Transaction Using the Client with a Known Address Book
+ */
 async function main() {
     if (
         process.env.OPERATOR_ID == null ||
