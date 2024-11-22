@@ -29,29 +29,32 @@ async function main() {
         );
     }
 
-    // Configure accounts and client
+    // 1. Configure account
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
     const operatorKey = PrivateKey.fromStringECDSA(process.env.OPERATOR_KEY);
 
+    // 2. Setup the first client
     const clientOne = Client.forMainnet();
+    clientOne.setOperator(operatorId, operatorKey);
 
-    // Get nodes fron clientOne
+    // 3. Get nodes fro, clientOne
     const nodesClient = clientOne._network._network.keys();
     const sortedNodes = sortNodes([...nodesClient]);
 
-    clientOne.setOperator(operatorId, operatorKey);
-
+    // 4. Defines the account which will receive the hbars after a TransferTransaction.
     const recipientAccountId = new AccountId(3941207);
 
-    // Create a new client with trimmed nodes, Nodes 16 and Node 21 are removed
-    const clientTwo = Client.forNetwork(trimmedNodes); // trimmedNodes are in utils/ListOfTrimmedNodes.js
+    // 5. Setup the second client with trimmed nodes, Nodes 16 and Node 21 are removed
+    // trimmedNodes are in utils/ListOfTrimmedNodes.js
+    const clientTwo = Client.forNetwork(trimmedNodes);
     clientTwo.setOperator(operatorId, operatorKey);
 
+    // 6. We run a loop in order to randomly hit some of the missing nodes
     // Each 5 seconds a transaction is submitted to one of the nodes.
     // If the transaction is submitted to one of the missing nodes INVALID_NODE_ACCOUNT error will be thrown
     setInterval(async () => {
         try {
-            // Only sign the transaction with ClientOne but don't submit it.
+            // 7. Only sign the transaction with ClientOne, but don't submit it.
             const signTransferTransaction = await new TransferTransaction()
                 .addHbarTransfer(operatorId, Hbar.fromTinybars(-1)) //Sending account
                 .addHbarTransfer(recipientAccountId, Hbar.fromTinybars(1)) //Receiving account
@@ -59,12 +62,13 @@ async function main() {
                 .sign(operatorKey);
 
 
-            // Log the missing nodes
+            // 8. Log the missing nodes
             const nodesTrimmedClient = sortNodes([...clientTwo._network._network.keys()]); 
             console.log("Missing nodes", findMissingNodes(sortedNodes, nodesTrimmedClient));
             
-            // Execute the transaction with ClientTwo.
+            // 9. Execute the transaction with ClientTwo.
             const transferTransaction = await signTransferTransaction.execute(clientTwo);
+            // 10. Gets the record and logs it.
             const transactionRecord = await transferTransaction.getRecord(clientTwo);
             console.log(
                 "The transfer transaction from account " +
