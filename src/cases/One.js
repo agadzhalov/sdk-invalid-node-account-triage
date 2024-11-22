@@ -72,6 +72,8 @@ async function main() {
         " was: " +
         transactionRecord.transactionId
     );
+
+    client.close();
 }
 
 void main();
