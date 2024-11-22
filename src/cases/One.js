@@ -41,7 +41,7 @@ async function main() {
             .setTransportSecurity(true);
     }
 
-    // 4. Get nodes and logs them for visibility
+    // 4. Get nodes, sorts and logs them for visibility
     const nodes = client._network._network.keys();
     console.log(sortNodes([...nodes]));
 
