@@ -55,8 +55,8 @@ async function main() {
             const signTransferTransaction = await new TransferTransaction()
                 .addHbarTransfer(operatorId, Hbar.fromTinybars(-1)) //Sending account
                 .addHbarTransfer(recipientAccountId, Hbar.fromTinybars(1)) //Receiving account
-                .sign(operatorKey)
                 .freezeWith(clientOne)
+                .sign(operatorKey);
 
 
             // Log the missing nodes
