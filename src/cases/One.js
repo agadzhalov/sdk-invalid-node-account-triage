@@ -47,7 +47,7 @@ async function main() {
 
 
     const traceLogger = new Logger(LogLevel.Trace);
-    //client.setLogger(traceLogger);
+    client.setLogger(traceLogger);
 
     // 5. Defines the account which will receive the hbars after a TransferTransaction.
     const recipientAccountId = new AccountId(3941207);
@@ -70,7 +70,9 @@ async function main() {
         " to account " +
         recipientAccountId +
         " was: " +
-        transactionRecord.transactionId
+        transactionRecord.transactionId + 
+        " executed against node id " + 
+        transferTransaction.nodeId.toString()
     );
 
     client.close();

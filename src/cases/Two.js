@@ -36,6 +36,9 @@ async function main() {
     const client = Client.forName(process.env.HEDERA_NETWORK);
     client.setOperator(operatorId, operatorKey);
 
+    const traceLogger = new Logger(LogLevel.Trace);
+    client.setLogger(traceLogger);
+
     if (process.env.HEDERA_NETWORK.toLowerCase() === "mainnet") {
         client
             .setMirrorNetwork(["mainnet-public.mirrornode.hedera.com:443"])
